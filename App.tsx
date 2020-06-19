@@ -3,17 +3,30 @@ import { StyleSheet, Text, View, Alert } from 'react-native';
 import { Button, Input } from 'react-native-elements'
 
 // Should be in it's own file but App.tsx wouldn't recognize it for some reason?
-export function DialPad(props: any) {
-  const updateInput = (val: string) => props.setValue(val)
+export function DialPad() {
+  const [value, setValue] = useState("");
 
+  const updateInput = (val: string) => {
+    if (val === "<") {
+      setValue(value.slice(0, value.length - 1))
+    }
+    else {
+      if (value.length === 10) {
+        return
+      }
+      setValue(value.concat(val));
+    }
+  }
+  
   return (
       <View>
+        <Text>{value}</Text>
         <View style={dialPadStyles.containerRow}>
           <Button
             title="1"
             buttonStyle={dialPadStyles.button}
             titleStyle={dialPadStyles.buttonTitle}
-            onPress={updateInput("1")}
+            onPress={() => updateInput("1")}
           />
           <Button
               title="2"
@@ -79,7 +92,7 @@ export function DialPad(props: any) {
               title="<"
               buttonStyle={dialPadStyles.button}
             titleStyle={dialPadStyles.buttonTitle}
-              onPress={() => Alert.alert("pressed")}
+              onPress={() => updateInput("<")}
           />
         </View>
         <Button
@@ -95,16 +108,17 @@ export function DialPad(props: any) {
 
 
 export default function App() {
-  // const [value, setValue] = useState("");
 
-  let value = "";
-  const newValue = (newValue: string) => value.concat(newValue);
+  // let value = "";
+  // const newValue = (newValue: string) => {
+  //   Alert.alert("newVal")
+  //   value.concat(newValue);
+  // }
 
   return (
     <View style={styles.container}>
       <Text>Enter a phone number to see where it's from!</Text>
-      <Input disabled value={value}/>
-      <DialPad setValue={newValue}/>
+      <DialPad/>
     </View>
   );
 }
