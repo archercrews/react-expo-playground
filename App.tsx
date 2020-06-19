@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Alert } from 'react-native';
 import { Button, Input } from 'react-native-elements'
+import getPhoneNumberData from './api-service';
 
 // Should be in it's own file but App.tsx wouldn't recognize it for some reason?
-export function DialPad() {
+export function DialPad(props: any) {
   const [value, setValue] = useState("");
+  const [location, setLocation] = useState("");
 
   const updateInput = (val: string) => {
+    // TODO: Add clear button to wipe number and and location fields. Should prob
+    // be turned into a switch to clean it up.
     if (val === "<") {
       setValue(value.slice(0, value.length - 1))
     }
@@ -16,6 +20,11 @@ export function DialPad() {
       }
       setValue(value.concat(val));
     }
+  }
+
+  const getPhoneNumber = async () => {
+    const data = await getPhoneNumberData(value);
+    setLocation(data.location);
   }
   
   return (
@@ -32,13 +41,13 @@ export function DialPad() {
               title="2"
               buttonStyle={dialPadStyles.button}
               titleStyle={dialPadStyles.buttonTitle}
-              onPress={() => Alert.alert("pressed")}
+              onPress={() => updateInput("2")}
           />
           <Button
               title="3"
               buttonStyle={dialPadStyles.button}
             titleStyle={dialPadStyles.buttonTitle}
-              onPress={() => Alert.alert("pressed")}
+            onPress={() => updateInput("3")}
           />
         </View>
         <View style={dialPadStyles.containerRow}>
@@ -46,19 +55,19 @@ export function DialPad() {
               title="4"
               buttonStyle={dialPadStyles.button}
             titleStyle={dialPadStyles.buttonTitle}
-              onPress={() => Alert.alert("pressed")}
+            onPress={() => updateInput("4")}
           />
           <Button
               title="5"
               buttonStyle={dialPadStyles.button}
             titleStyle={dialPadStyles.buttonTitle}
-              onPress={() => Alert.alert("pressed")}
+            onPress={() => updateInput("5")}
           />
           <Button
               title="6"
               buttonStyle={dialPadStyles.button}
             titleStyle={dialPadStyles.buttonTitle}
-              onPress={() => Alert.alert("pressed")}
+            onPress={() => updateInput("6")}
           />
         </View>
         <View style={dialPadStyles.containerRow}>
@@ -66,19 +75,19 @@ export function DialPad() {
               title="7"
               buttonStyle={dialPadStyles.button}
             titleStyle={dialPadStyles.buttonTitle}
-              onPress={() => Alert.alert("pressed")}
+            onPress={() => updateInput("7")}
           />
           <Button
               title="8"
               buttonStyle={dialPadStyles.button}
             titleStyle={dialPadStyles.buttonTitle}
-              onPress={() => Alert.alert("pressed")}
+            onPress={() => updateInput("8")}
           />
           <Button
               title="9"
               buttonStyle={dialPadStyles.button}
             titleStyle={dialPadStyles.buttonTitle}
-              onPress={() => Alert.alert("pressed")}
+            onPress={() => updateInput("9")}
           />
         </View>
         <View style={dialPadStyles.containerRow}>
@@ -86,7 +95,7 @@ export function DialPad() {
               title="0"
               buttonStyle={dialPadStyles.button}
             titleStyle={dialPadStyles.buttonTitle}
-              onPress={() => Alert.alert("pressed")}
+            onPress={() => updateInput("0")}
           />
           <Button
               title="<"
@@ -99,8 +108,9 @@ export function DialPad() {
               title="Send it!"
               buttonStyle={dialPadStyles.button}
             titleStyle={dialPadStyles.buttonTitle}
-              onPress={() => Alert.alert("pressed")}
+              onPress={() => getPhoneNumber()}
           />
+          <Text>Your phone number is from: {location}</Text>
       </View>
   );
 }
